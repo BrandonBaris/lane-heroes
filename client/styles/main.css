@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  /*overflow: hidden;*/
+  /*height: 100%;*/
+  background: #1a1a1a;
+  font-size: 16px;
+  overflow: auto;
+}
+
+.logo h1{
+  color: #fbb03b;
+  font-size: 6em;
+  text-shadow: 0 5px #455;
+}
+.logo{
+  margin-bottom: 50px;
+}
+
+.logo h2{
+  margin-top: 0px;
+}
+
+h1, h2, h3{
+  text-transform: uppercase;
+}
+
+h1, h3{
+  color: #fbb03b;
+}
+
+h1, h2 {
+  font-family: 'Roboto Slab', serif;
+}
+
+h2, h3{
+  margin-top: 15px;
+}
+
+h3{
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+h2 img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#gw > div {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+/* buttons */
+a{
+  text-decoration: none;
+  display: block;
+}
+
+.button{
+  padding: 20px 100px;
+  border: 1px solid #f7931e;
+  border-radius: 10px;
+  background-color: #fbb03b;
+  box-shadow: 0 6px #f7931e;
+  color: #fff8b6;
+  margin-bottom: 20px;
+}
+
+.button:hover{
+  border: 1px solid #fbb03b;
+  background-color: #f7931e;
+  box-shadow: 0 6px #fbb03b;
+}
+
+/* Index */
+.container{
+  background-image: url('../assets/background0.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  min-height: 960px;
+}
+
+.container .row img{
+  width: 450px;
+}
+
+/* Forms */
+.wrapper{
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+input{
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+input[type=text]{
+  height: 30px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 94%;
+}
+
+input[type=submit]{
+  font-size: 16px;
+}
+
+/*.back{
+  display: block;
+}*/
+
+/* Lobby */
+.content_container, .team{
+  width: 320px;
+  margin: 0 auto 30px;
+  text-align: left;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 15px 40px 20px 50px;
+  border-radius: 20px;
+}
+
+.info{   
+  margin-bottom: 60px;
+  font-size: 20px;
+}
+
+.info p {
+  margin-bottom: 10px;
+}
+
+.buttons{
+  width: 300px;
+  margin: 20px auto 50px;
+}
+
+.content_container ol li{
+  margin-bottom: 20px;
+}
+
+.team{
+  text-align: left;
+}
