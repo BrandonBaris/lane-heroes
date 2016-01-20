@@ -1,0 +1,43 @@
+<template name="lobby">
+  <h4>
+    {{#if isLoading }}
+      <span class="spinner"></span>
+    {{else}}
+      Waiting for Player.
+    {{/if}}
+  </h4>
+
+  <div class="access-code">
+    Access Code:
+    <span>{{ game.accessCode }}</span>
+  </div>
+
+    <span class="access-button-separator"></span>
+
+  <hr>
+
+  <ol class="lobby-player-list">
+    {{#each players }}
+      <li>
+        {{ name }}
+
+        {{#if isCurrent }}
+          <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
+            <i class="fa fa-pencil"></i>
+          </a>
+        {{else}}
+          <a href="#" class="btn-remove-player" data-player-id="{{ _id }}">
+            <i class="fa fa-close"></i>
+          </a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ol>
+  
+  <hr>
+
+  <div class="button-container">
+    <button class="btn-start">Start Game</button>
+    <button class="btn-leave">Leave Game</button>
+  </div>
+</template>

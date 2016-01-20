@@ -24,3 +24,5 @@ fourseven:scss
 reactive-var
 mrt:cron-tick
 mizzao:timesync
+momentjs:moment
+mrt:flash-messages

@@ -1,0 +1,18 @@
+<template name="startMenu">
+  <div class="main-menu">
+    <h4>Welcome</h4>
+    <form id="enter-name">
+      <div class="button-container">
+        {{#if player }}
+          {{ player.name }}
+          <hr>
+          <button id="btn-new-game">New Game</button>
+          <button id="btn-join-game">Join Game</button>
+          <hr>
+        {{/if}}
+        <input type="text" placeholder="Enter your name." id="player-name" name="playerName">
+        <input type="submit" value={{#if player}}Change Name{{else}}Submit{{/if}}>
+      </div>
+    </form>
+  </div>
+</template>

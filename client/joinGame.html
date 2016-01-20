@@ -1,0 +1,17 @@
+<template name="joinGame">
+  <h4>
+    Welcome! Select a game to challenge that person or make a new one.
+  </h4>
+  {{ player.name }}
+  {{> flashMessages}}     
+  <hr>
+  <ol>
+    {{#each games }}
+      <a href="/{{accessCode}}"><li>{{ accessCode }}</li></a>
+    {{/each}}
+  </ol>
+
+  <div class="button-container">
+    <button class="btn-back">back</button>
+  </div>
+</template>
