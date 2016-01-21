@@ -348,7 +348,7 @@ Game.init = function init(numLanes) {
 
   Game.SETTINGS.cpuDifficulty = 0;
 
-  var mountain = PIXI.Sprite.fromImage("assets/background.png");
+  var mountain = PIXI.Sprite.fromImage("/assets/background.png");
   mountain.anchor.set(0,0);
   mountain.position.set(0,60);
   Game.stage.addChild(mountain);
@@ -415,17 +415,17 @@ Game.init = function init(numLanes) {
 
     var heroImage;
     switch( i ){
-      case 0: heroImage = 'assets/heroes/airship.png';
+      case 0: heroImage = '/assets/heroes/airship.png';
       break;
-      case 1: heroImage = 'assets/heroes/snailhouse.png';
+      case 1: heroImage = '/assets/heroes/snailhouse.png';
       break;
-      case 2: heroImage = 'assets/heroes/wizzard.png';
+      case 2: heroImage = '/assets/heroes/wizzard.png';
       break;
-      case 3: heroImage = 'assets/heroes/swordsmen.png';
+      case 3: heroImage = '/assets/heroes/swordsmen.png';
       break;
-      case 4: heroImage = 'assets/heroes/gunner.png';
+      case 4: heroImage = '/assets/heroes/gunner.png';
       break;
-      default: heroImage = 'assets/heroes/bunny.png';
+      default: heroImage = '/assets/heroes/bunny.png';
     }
 
     var hero = PIXI.Sprite.fromImage( heroImage );
