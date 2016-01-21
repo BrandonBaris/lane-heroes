@@ -51,6 +51,32 @@ Template.lobby.events({
   }
 });
 
+Template.lobby.created = function (event) {
+  var currentPlayer = getCurrentPlayer();
+  var accessCode = Session.get("urlAccessCode");
+
+  Session.set("loading", true);
+  Meteor.subscribe('games', accessCode, function onReady(){
+    Session.set("loading", false);
+
+    var game = Games.findOne({
+      accessCode: accessCode
+    });
+
+    if (game) {
+      Players.update( currentPlayer._id, { $set: { gameID: game._id }});
+      Meteor.subscribe('players', game._id);
+
+      Session.set('urlAccessCode', null);
+      Session.set("gameID", game._id);
+      Session.set("playerID", player._id);
+      // Session.set("currentView", "lobby");
+    } else {
+      FlashMessages.sendError('Error joining room');
+    }
+  });
+};
+
 Template.lobby.rendered = function (event) {
   var url = getAccessLink();
 };

@@ -3,3 +3,7 @@ Template.main.helpers({
     return Session.get('currentView');
   }
 });
+
+Template.main.rendered = function ( event ) {
+  resetUserState();
+};

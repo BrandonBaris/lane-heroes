@@ -49,14 +49,18 @@ Template.joinGame.events({
 
 Template.joinGame.helpers({
   games: function () {
-    // var currentPlayer = getCurrentPlayer();
+    var currentPlayer = getCurrentPlayer();
     var games = Games.find().fetch();
     // console.log('currentPlayer',currentPlayer);
-    // games.forEach(function(game){
-    //   if (game._id === currentPlayer.gameID){
-    //     player.isCurrent = true;
-    //   }
-    // });
+    games.forEach(function(game){
+      if (game._id === currentPlayer.gameID){
+        player.isCurrent = true;
+      }
+    });
+
+    games.filter( function( game ){
+      return game.state == 'waitingForPlayers';
+    });
 
     return games;
   },
@@ -64,7 +68,6 @@ Template.joinGame.helpers({
     return getCurrentPlayer();
   }
 });
-
 
 Template.joinGame.rendered = function (event) {
   // FlashMessages.sendInfo("You can found <strong>Meteor</strong> <a href='http://meteor.com'>here</a>");
