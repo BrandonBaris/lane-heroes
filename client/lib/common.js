@@ -95,11 +95,18 @@ trackGameState = function trackGameState () {
 
 leaveGame = function leaveGame () {  
   var player = getCurrentPlayer();
+  console.log('playerid',player);
+  Players.update(player._id, { $set: { gameID: null }});
+  console.log('player',player);
+  Session.set("gameID", null);
+  Session.set("urlAccessCode", null);
+  Session.set("currentView", "joinGame");
 
-  Session.set("currentView", "startMenu");
-  Players.remove(player._id);
+  
+  // Session.set("currentView", "startMenu");
+  // Players.remove(player._id);
 
-  Session.set("playerID", null);
+  // Session.set("playerID", null);
 };
 
 resetUserState = function resetUserState(){
@@ -121,25 +128,25 @@ Meteor.setInterval(function () {
   Session.set('time', new Date());
 }, 1000);
 
-if (hasHistoryApi()){
-  function trackUrlState () {
-    var accessCode = null;
-    var game = getCurrentGame();
-    if (game){
-      accessCode = game.accessCode;
-    } else {
-      accessCode = Session.get('urlAccessCode');
-    }
+// if (hasHistoryApi()){
+//   function trackUrlState () {
+//     var accessCode = null;
+//     var game = getCurrentGame();
+//     if (game){
+//       accessCode = game.accessCode;
+//     } else {
+//       accessCode = Session.get('urlAccessCode');
+//     }
     
-    var currentURL = '/';
-    if (accessCode){
-      currentURL += accessCode+'/';
-    }
-    window.history.pushState(null, null, currentURL);
-  }
-  Tracker.autorun(trackUrlState);
-}
-Tracker.autorun(trackGameState);
+//     var currentURL = '/';
+//     if (accessCode){
+//       currentURL += accessCode+'/';
+//     }
+//     window.history.pushState(null, null, currentURL);
+//   }
+//   Tracker.autorun(trackUrlState);
+// }
+// Tracker.autorun(trackGameState);
 
 window.onbeforeunload = resetUserState;
 window.onpagehide = resetUserState;

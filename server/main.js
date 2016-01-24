@@ -20,12 +20,12 @@ var MyCron = new Cron(60000);
 
 MyCron.addJob(5, cleanUpGamesAndPlayers);
 
-Meteor.publish('games', function(accessCode) {
-  return Games.find({"accessCode": accessCode});
+Meteor.publish('games', function() {
+  return Games.find();
 });
 
-Meteor.publish('players', function(name) {
-  return Players.find({"name": name});
+Meteor.publish('players', function() {
+  return Players.find();
 });
 
 // Meteor.publish('players', function(gameID) {

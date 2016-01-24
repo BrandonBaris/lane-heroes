@@ -50,7 +50,7 @@ Template.joinGame.events({
 Template.joinGame.helpers({
   games: function () {
     var currentPlayer = getCurrentPlayer();
-    var games = Games.find().fetch();
+    var games = Games.find({}).fetch({});
     // console.log('currentPlayer',currentPlayer);
     games.forEach(function(game){
       if (game._id === currentPlayer.gameID){
@@ -70,6 +70,8 @@ Template.joinGame.helpers({
 });
 
 Template.joinGame.rendered = function (event) {
+  var currentPlayer = getCurrentPlayer();
+  console.log('curplayer',currentPlayer);
   // FlashMessages.sendInfo("You can found <strong>Meteor</strong> <a href='http://meteor.com'>here</a>");
   // resetUserState();
 

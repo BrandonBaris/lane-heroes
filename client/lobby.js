@@ -64,12 +64,13 @@ Template.lobby.created = function (event) {
     });
 
     if (game) {
+      console.log('game',game);
       Players.update( currentPlayer._id, { $set: { gameID: game._id }});
       Meteor.subscribe('players', game._id);
 
       Session.set('urlAccessCode', null);
       Session.set("gameID", game._id);
-      Session.set("playerID", player._id);
+      Session.set("playerID", currentPlayer._id);
       // Session.set("currentView", "lobby");
     } else {
       FlashMessages.sendError('Error joining room');
