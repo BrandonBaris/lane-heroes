@@ -2,9 +2,9 @@ Template.lobby.helpers({
   game: function () {
     return getCurrentGame();
   },
-  accessLink: function () {
-    return getAccessLink();
-  },
+  // accessLink: function () {
+  //   return getAccessLink();
+  // },
   player: function () {
     return getCurrentPlayer();
   },
@@ -56,7 +56,7 @@ Template.lobby.created = function (event) {
   var accessCode = Session.get("urlAccessCode");
 
   Session.set("loading", true);
-  Meteor.subscribe('games', accessCode, function onReady(){
+  Meteor.subscribe('games', function onReady(){
     Session.set("loading", false);
 
     var game = Games.findOne({
@@ -79,5 +79,5 @@ Template.lobby.created = function (event) {
 };
 
 Template.lobby.rendered = function (event) {
-  var url = getAccessLink();
+  // var url = getAccessLink();
 };

@@ -1,6 +1,6 @@
-Handlebars.registerHelper('toCapitalCase', function(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-});
+// Handlebars.registerHelper('toCapitalCase', function(str) {
+//   return str.charAt(0).toUpperCase() + str.slice(1);
+// });
 
 getCurrentGame = function getCurrentGame(){
   var gameID = Session.get("gameID");
@@ -10,148 +10,155 @@ getCurrentGame = function getCurrentGame(){
   }
 };
 
-getAccessLink = function getAccessLink(){
-  var game = getCurrentGame();
+// getAccessLink = function getAccessLink(){
+//   var game = getCurrentGame();
 
-  if (!game){
-    return;
-  }
+//   if (!game){
+//     return;
+//   }
 
-  return Meteor.settings.public.url + game.accessCode + "/";
-};
+//   return Meteor.settings.public.url + game.accessCode + "/";
+// };
 
 getCurrentPlayer = function getCurrentPlayer(){
   var playerID = Session.get("playerID");
 
   if (playerID) {
+    console.log('Player session exists: ', playerID);
     return Players.findOne(playerID);
   }
 };
 
-generateAccessCode = function generateAccessCode(){
-  var code = "";
-  var possible = "abcdefghijklmnopqrstuvwxyz";
+// generateAccessCode = function generateAccessCode(){
+//   var code = "";
+//   var possible = "abcdefghijklmnopqrstuvwxyz";
 
-    for(var i=0; i < 6; i++){
-      code += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+//     for(var i=0; i < 6; i++){
+//       code += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
 
-    return code;
-};
+//     return code;
+// };
 
-generateNewGame = function generateNewGame(){
-  var game = {
-    accessCode: generateAccessCode(),
-    state: "waitingForPlayers",
-    lengthInMinutes: 3,
-    endTime: null,
-    paused: false,
-    pausedTime: null,
-    position: []
-  };
+// generateNewGame = function generateNewGame(){
+//   var game = {
+//     accessCode: generateAccessCode(),
+//     state: "waitingForPlayers",
+//     lengthInMinutes: 3,
+//     endTime: null,
+//     position: []
+//   };
 
-  var gameID = Games.insert(game);
-  game = Games.findOne(gameID);
+//   var gameID = Games.insert(game);
+//   game = Games.findOne(gameID);
 
-  return game;
-};
+//   return game;
+// };
 
-generateNewPlayer = function generateNewPlayer( name ){
-  var player = {
-    gameID: null,
-    name: name,
-    isFirstPlayer: false
-  };
+// generateNewPlayer = function generateNewPlayer( name ){
+//   var player = {
+//     gameID: null,
+//     name: name
+//   };
 
-  var playerID = Players.insert(player);
+//   var playerID = Players.insert(player);
 
-  return Players.findOne(playerID);
-};
+//   return Players.findOne(playerID);
+// };
 
-trackGameState = function trackGameState () {
-  var gameID = Session.get("gameID");
-  var playerID = Session.get("playerID");
+// trackGameState = function trackGameState () {
+//   var gameID = Session.get("gameID");
+//   var playerID = Session.get("playerID");
 
-  if (!gameID || !playerID){
-    return;
-  }
+//   if (!gameID || !playerID){
+//     return;
+//   }
 
-  var game = Games.findOne(gameID);
-  var player = Players.findOne(playerID);
+//   var game = Games.findOne(gameID);
+//   var player = Players.findOne(playerID);
 
-  if (!game || !player){
-    Session.set("gameID", null);
-    Session.set("playerID", null);
-    Session.set("currentView", "startMenu");
-    return;
-  }
+//   if (!game || !player){
+//     Session.set("gameID", null);
+//     Session.set("playerID", null);
+//     Session.set("currentView", "startMenu");
+//     return;
+//   }
 
-  if(game.state === "inProgress"){
-    Session.set("currentView", "gameView");
-  } else if (game.state === "waitingForPlayers") {
-    Session.set("currentView", "lobby");
-  }
-};
+//   if(game.state === "inProgress"){
+//     Session.set("currentView", "gameView");
+//   } else if (game.state === "waitingForPlayers") {
+//     Session.set("currentView", "lobby");
+//   }
+// };
 
 leaveGame = function leaveGame () {  
   var player = getCurrentPlayer();
+  var game = getCurrentGame();
+  console.log('game',JSON.stringify(game));
+  console.log('game.players',game.players);
   console.log('playerid',player);
-  Players.update(player._id, { $set: { gameID: null }});
-  console.log('player',player);
-  Session.set("gameID", null);
-  Session.set("urlAccessCode", null);
-  Session.set("currentView", "joinGame");
-
-  
-  // Session.set("currentView", "startMenu");
-  // Players.remove(player._id);
-
-  // Session.set("playerID", null);
+  Meteor.subscribe('games', function onReady(){
+    var player_index = game.players.indexOf( player._id );
+    var edited_players = game.players.slice( player_index, player_index + 1 );
+    console.log('edited_players',edited_players);
+    Games.update( game._id, { $set: { players: edited_players }});
+    Players.update(player._id, { $set: { gameID: null }});
+    Session.set("gameID", null);
+    // Session.set("urlAccessCode", null);
+    Session.set("currentView", "startMenu");
+  });
 };
 
-resetUserState = function resetUserState(){
-  var player = getCurrentPlayer();
+//   // Session.set("currentView", "startMenu");
+//   // Players.remove(player._id);
 
-  if (player){
-    Players.remove(player._id);
-  }
+//   // Session.set("playerID", null);
+//   return Meteor.settings.public.url + "/";
+// };
 
-  Session.set("gameID", null);
-  Session.set("playerID", null);
-};
+// resetUserState = function resetUserState(){
+//   var player = getCurrentPlayer();
 
-hasHistoryApi = function hasHistoryApi () {
-  return !!(window.history && window.history.pushState);
-};
-
-Meteor.setInterval(function () {
-  Session.set('time', new Date());
-}, 1000);
-
-// if (hasHistoryApi()){
-//   function trackUrlState () {
-//     var accessCode = null;
-//     var game = getCurrentGame();
-//     if (game){
-//       accessCode = game.accessCode;
-//     } else {
-//       accessCode = Session.get('urlAccessCode');
-//     }
-    
-//     var currentURL = '/';
-//     if (accessCode){
-//       currentURL += accessCode+'/';
-//     }
-//     window.history.pushState(null, null, currentURL);
+//   if (player){
+//     Players.remove(player._id);
 //   }
-//   Tracker.autorun(trackUrlState);
-// }
-// Tracker.autorun(trackGameState);
 
-window.onbeforeunload = resetUserState;
-window.onpagehide = resetUserState;
+//   Session.set("gameID", null);
+//   Session.set("playerID", null);
+// };
 
-FlashMessages.configure({
-  autoHide: true,
-  autoScroll: false
-});
+// // hasHistoryApi = function hasHistoryApi () {
+// //   return !!(window.history && window.history.pushState);
+// // };
+
+// Meteor.setInterval(function () {
+//   Session.set('time', new Date());
+// }, 1000);
+
+// // if (hasHistoryApi()){
+// //   function trackUrlState () {
+// //     var accessCode = null;
+// //     var game = getCurrentGame();
+// //     if (game){
+// //       accessCode = game.accessCode;
+// //     } else {
+// //       accessCode = Session.get('urlAccessCode');
+// //     }
+    
+// //     var currentURL = '/';
+// //     if (accessCode){
+// //       currentURL += accessCode+'/';
+// //     }
+// //     window.history.pushState(null, null, currentURL);
+// //   }
+// //   Tracker.autorun(trackUrlState);
+// // }
+// // Tracker.autorun(trackGameState);
+
+// window.onbeforeunload = resetUserState;
+// window.onpagehide = resetUserState;
+
+// FlashMessages.configure({
+//   autoHide: true,
+//   autoScroll: false
+// });
