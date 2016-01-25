@@ -9,7 +9,7 @@ Template.startMenu.events({
         name: playerName
       };
       var playerID = Players.insert(new_player);
-      console.log('player',playerID);
+      console.log('PLAYER CREATED',JSON.stringify(playerID));
       return Players.findOne(playerID);
     };
     var player = createPlayer( playerName );
@@ -19,6 +19,8 @@ Template.startMenu.events({
     return false;
   },
   'click #btn-new-game': function () {
+
+    console.log('MAKING NEW GAME');
     function generateRoomName() {
       var new_code = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -47,13 +49,12 @@ Template.startMenu.events({
 
     var game = createGame();
     var player = getCurrentPlayer();
-    Meteor.subscribe('games', game.accessCode, function onReady(){  
-      // console.log('JSON.stringify(game)',JSON.stringify(game));
-      // var test = game.players.push( player)
+    Meteor.subscribe('games', game.roomName, function onReady(){  
       Games.update({ _id: game._id}, { $push: { players: player._id }});
       Meteor.subscribe('players', player.name, function onReady(){
         Players.update( player._id, { $set: { gameID: game._id }});
         Session.set("gameID", game._id);
+        Meteor.settings.public.url + game.roomName + "/";
         Session.set("currentView", 'lobby');
       });
     });

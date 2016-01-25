@@ -1,72 +1,72 @@
-// Template.joinGame.events({
-//   // 'submit #join-game': function (event) {
+Template.joinGame.events({
+  // 'submit #join-game': function (event) {
 
-//   //   var accessCode = event.target.accessCode.value;
-//   //   var playerName = event.target.playerName.value;
+  //   var roomName = event.target.roomName.value;
+  //   var playerName = event.target.playerName.value;
 
-//   //   if (!playerName || Session.get('loading')) {
-//   //     return false;
-//   //   }
+  //   if (!playerName || Session.get('loading')) {
+  //     return false;
+  //   }
 
-//   //   accessCode = accessCode.trim();
-//   //   accessCode = accessCode.toLowerCase();
+  //   roomName = roomName.trim();
+  //   roomName = roomName.toLowerCase();
 
-//   //   Session.set("loading", true);
+  //   Session.set("loading", true);
 
-//   //   Meteor.subscribe('games', accessCode, function onReady(){
-//   //     Session.set("loading", false);
+  //   Meteor.subscribe('games', roomName, function onReady(){
+  //     Session.set("loading", false);
 
-//   //     var game = Games.findOne({
-//   //       accessCode: accessCode
-//   //     });
+  //     var game = Games.findOne({
+  //       roomName: roomName
+  //     });
 
-//   //     if (game) {
-//   //       Meteor.subscribe('players', game._id);
-//   //       player = generateNewPlayer(game, playerName);
+  //     if (game) {
+  //       Meteor.subscribe('players', game._id);
+  //       player = generateNewPlayer(game, playerName);
 
-//   //       if (game.state === "inProgress") {
-//   //         var default_role = game.location.roles[game.location.roles.length - 1];
-//   //         Players.update(player._id, {$set: {role: default_role}});
-//   //       }
+  //       if (game.state === "inProgress") {
+  //         var default_role = game.location.roles[game.location.roles.length - 1];
+  //         Players.update(player._id, {$set: {role: default_role}});
+  //       }
 
-//   //       Session.set('urlAccessCode', null);
-//   //       Session.set("gameID", game._id);
-//   //       Session.set("playerID", player._id);
-//   //       Session.set("currentView", "lobby");
-//   //     } else {
-//   //       FlashMessages.sendError('Invalid access code.');
-//   //     }
-//   //   });
+  //       Session.set('urlAccessCode', null);
+  //       Session.set("gameID", game._id);
+  //       Session.set("playerID", player._id);
+  //       Session.set("currentView", "lobby");
+  //     } else {
+  //       FlashMessages.sendError('Invalid access code.');
+  //     }
+  //   });
 
-//   //   return false;
-//   // },
-//   'click .btn-back': function () {
-//     Session.set('urlAccessCode', null);
-//     Session.set("currentView", "startMenu");
-//     return false;
-//   }
-// });
+  //   return false;
+  // },
+  'click .btn-back': function () {
+    // Session.set('urlAccessCode', null);
+    Session.set("currentView", "startMenu");
+    return false;
+  }
+});
 
-// Template.joinGame.helpers({
-//   games: function () {
-//     var currentPlayer = getCurrentPlayer();
-//     var games = Games.find().fetch();    // console.log('currentPlayer',currentPlayer);
-//     // games.forEach(function(game){
-//     //   if (game._id === currentPlayer.gameID){
-//     //     player.isCurrent = true;
-//     //   }
-//     // });
+Template.joinGame.helpers({
+  games: function () {
+    var currentPlayer = getCurrentPlayer();
+    var games = Games.find().fetch();    // console.log('currentPlayer',currentPlayer);
+    // games.forEach(function(game){
+    //   if (game._id === currentPlayer.gameID){
+    //     player.isCurrent = true;
+    //   }
+    // });
 
-//     games.filter( function( game ){
-//       return game.state == 'waitingForPlayers';
-//     });
+    games.filter( function( game ){
+      return game.state == 'waitingForPlayers';
+    });
 
-//     return games;
-//   },
-//   player: function() {
-//     return getCurrentPlayer();
-//   }
-// });
+    return games;
+  },
+  player: function() {
+    return getCurrentPlayer();
+  }
+});
 
 // Template.joinGame.rendered = function (event) {
 //   var currentPlayer = getCurrentPlayer();

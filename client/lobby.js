@@ -16,7 +16,7 @@ Template.lobby.helpers({
       return null;
     }
 
-    var players = Players.find({'gameID': game._id}, {'sort': {'createdAt': 1}}).fetch();
+    var players = Players.find({gameID: game._id}, {'sort': {'createdAt': 1}}).fetch();
 
     players.forEach(function(player){
       if (player._id === currentPlayer._id){
@@ -46,34 +46,56 @@ Template.lobby.events({
   'click .btn-edit-player': function (event) {
     var game = getCurrentGame();
     resetUserState();
-    Session.set('urlAccessCode', game.accessCode);
+    Session.set('urlAccessCode', game.roomName);
     Session.set('currentView', 'joinGame');
   }
 });
 
 Template.lobby.created = function (event) {
-  var currentPlayer = getCurrentPlayer();
-  var accessCode = Session.get("urlAccessCode");
+  // var currentPlayer = getCurrentPlayer();
+  // // var roomName = Session.get("urlAccessCode");
 
-  Session.set("loading", true);
+  // Session.set("loading", true);
+  // Meteor.subscribe('games', function onReady(){
+  //   Session.set("loading", false);
+
+  //   var game = Games.findOne({
+  //     roomName: roomName
+  //   });
+
+  //   if (game) {
+  //     console.log('game',game);
+  //     Players.update( currentPlayer._id, { $set: { gameID: game._id }});
+  //     Meteor.subscribe('players', game._id);
+
+  //     // Session.set('urlAccessCode', null);
+  //     Session.set("gameID", game._id);
+  //     Session.set("playerID", currentPlayer._id);
+  //     // Session.set("currentView", "lobby");
+  //   } else {
+  //     FlashMessages.sendError('Error joining room');
+  //   }
+  // });
+  var player = getCurrentPlayer();
+  console.log('player got in lobby',player);
+  console.log('current gameID set', Session.get('gameID'));
+  function getExistingGame() {
+    var gameRoom = Session.get("urlRoomName");
+    console.log('gameRoom',gameRoom);
+    if (gameRoom) {
+      var test = Games.findOne( gameRoom );
+      console.log('test',test);
+      return test;
+    }
+  };
   Meteor.subscribe('games', function onReady(){
-    Session.set("loading", false);
-
-    var game = Games.findOne({
-      accessCode: accessCode
-    });
-
-    if (game) {
-      console.log('game',game);
-      Players.update( currentPlayer._id, { $set: { gameID: game._id }});
-      Meteor.subscribe('players', game._id);
-
-      Session.set('urlAccessCode', null);
-      Session.set("gameID", game._id);
-      Session.set("playerID", currentPlayer._id);
-      // Session.set("currentView", "lobby");
-    } else {
-      FlashMessages.sendError('Error joining room');
+    if ( Session.get('gameID') === null ){
+      var game = getExistingGame();
+      console.log('got an existing game',game);
+      Games.update({ _id: game._id }, { $push: { players: player._id }});
+      Meteor.subscribe('players', function onReady(){
+        Players.update({ _id: player._id }, { gameID: game._id });
+      });
     }
   });
 };

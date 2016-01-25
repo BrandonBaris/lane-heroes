@@ -17,7 +17,7 @@ getCurrentGame = function getCurrentGame(){
 //     return;
 //   }
 
-//   return Meteor.settings.public.url + game.accessCode + "/";
+//   return Meteor.settings.public.url + game.roomName + "/";
 // };
 
 getCurrentPlayer = function getCurrentPlayer(){
@@ -42,7 +42,7 @@ getCurrentPlayer = function getCurrentPlayer(){
 
 // generateNewGame = function generateNewGame(){
 //   var game = {
-//     accessCode: generateAccessCode(),
+//     roomName: generateAccessCode(),
 //     state: "waitingForPlayers",
 //     lengthInMinutes: 3,
 //     endTime: null,
@@ -104,6 +104,7 @@ leaveGame = function leaveGame () {
     Games.update( game._id, { $set: { players: edited_players }});
     Players.update(player._id, { $set: { gameID: null }});
     Session.set("gameID", null);
+    console.log('Session.get',Session.get('gameID'));
     // Session.set("urlAccessCode", null);
     Session.set("currentView", "startMenu");
   });
@@ -137,17 +138,17 @@ leaveGame = function leaveGame () {
 
 // // if (hasHistoryApi()){
 // //   function trackUrlState () {
-// //     var accessCode = null;
+// //     var roomName = null;
 // //     var game = getCurrentGame();
 // //     if (game){
-// //       accessCode = game.accessCode;
+// //       roomName = game.roomName;
 // //     } else {
-// //       accessCode = Session.get('urlAccessCode');
+// //       roomName = Session.get('urlAccessCode');
 // //     }
     
 // //     var currentURL = '/';
-// //     if (accessCode){
-// //       currentURL += accessCode+'/';
+// //     if (roomName){
+// //       currentURL += roomName+'/';
 // //     }
 // //     window.history.pushState(null, null, currentURL);
 // //   }

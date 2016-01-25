@@ -1,152 +1,152 @@
-Handlebars.registerHelper('toCapitalCase', function(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-});
+// Handlebars.registerHelper('toCapitalCase', function(str) {
+//   return str.charAt(0).toUpperCase() + str.slice(1);
+// });
 
-function getCurrentGame(){
-  var gameID = Session.get("gameID");
+// function getCurrentGame(){
+//   var gameID = Session.get("gameID");
 
-  if (gameID) {
-    return Games.findOne(gameID);
-  }
-}
+//   if (gameID) {
+//     return Games.findOne(gameID);
+//   }
+// }
 
-function getAccessLink(){
-  var game = getCurrentGame();
+// function getAccessLink(){
+//   var game = getCurrentGame();
 
-  if (!game){
-    return;
-  }
+//   if (!game){
+//     return;
+//   }
 
-  return Meteor.settings.public.url + game.accessCode + "/";
-}
+//   return Meteor.settings.public.url + game.roomName + "/";
+// }
 
-function getCurrentPlayer(){
-  var playerID = Session.get("playerID");
+// function getCurrentPlayer(){
+//   var playerID = Session.get("playerID");
 
-  if (playerID) {
-    return Players.findOne(playerID);
-  }
-}
+//   if (playerID) {
+//     return Players.findOne(playerID);
+//   }
+// }
 
-function generateAccessCode(){
-  var code = "";
-  var possible = "abcdefghijklmnopqrstuvwxyz";
+// function generateAccessCode(){
+//   var code = "";
+//   var possible = "abcdefghijklmnopqrstuvwxyz";
 
-    for(var i=0; i < 6; i++){
-      code += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+//     for(var i=0; i < 6; i++){
+//       code += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
 
-    return code;
-}
+//     return code;
+// }
 
-function generateNewGame(){
-  var game = {
-    accessCode: generateAccessCode(),
-    state: "waitingForPlayers",
-    location: null,
-    lengthInMinutes: 8,
-    endTime: null,
-    paused: false,
-    pausedTime: null
-  };
+// function generateNewGame(){
+//   var game = {
+//     roomName: generateAccessCode(),
+//     state: "waitingForPlayers",
+//     location: null,
+//     lengthInMinutes: 8,
+//     endTime: null,
+//     paused: false,
+//     pausedTime: null
+//   };
 
-  var gameID = Games.insert(game);
-  game = Games.findOne(gameID);
+//   var gameID = Games.insert(game);
+//   game = Games.findOne(gameID);
 
-  return game;
-}
+//   return game;
+// }
 
-function generateNewPlayer(game, name){
-  var player = {
-    gameID: game._id,
-    name: name,
-    role: null,
-    isSpy: false,
-    isFirstPlayer: false
-  };
+// function generateNewPlayer(game, name){
+//   var player = {
+//     gameID: game._id,
+//     name: name,
+//     role: null,
+//     isSpy: false,
+//     isFirstPlayer: false
+//   };
 
-  var playerID = Players.insert(player);
+//   var playerID = Players.insert(player);
 
-  return Players.findOne(playerID);
-}
+//   return Players.findOne(playerID);
+// }
 
-function trackGameState () {
-  var gameID = Session.get("gameID");
-  var playerID = Session.get("playerID");
+// function trackGameState () {
+//   var gameID = Session.get("gameID");
+//   var playerID = Session.get("playerID");
 
-  if (!gameID || !playerID){
-    return;
-  }
+//   if (!gameID || !playerID){
+//     return;
+//   }
 
-  var game = Games.findOne(gameID);
-  var player = Players.findOne(playerID);
+//   var game = Games.findOne(gameID);
+//   var player = Players.findOne(playerID);
 
-  if (!game || !player){
-    Session.set("gameID", null);
-    Session.set("playerID", null);
-    Session.set("currentView", "startMenu");
-    return;
-  }
+//   if (!game || !player){
+//     Session.set("gameID", null);
+//     Session.set("playerID", null);
+//     Session.set("currentView", "startMenu");
+//     return;
+//   }
 
-  if(game.state === "inProgress"){
-    Session.set("currentView", "gameView");
-  } else if (game.state === "waitingForPlayers") {
-    Session.set("currentView", "lobby");
-  }
-}
+//   if(game.state === "inProgress"){
+//     Session.set("currentView", "gameView");
+//   } else if (game.state === "waitingForPlayers") {
+//     Session.set("currentView", "lobby");
+//   }
+// }
 
-function leaveGame () {  
-  var player = getCurrentPlayer();
+// function leaveGame () {  
+//   var player = getCurrentPlayer();
 
-  Session.set("currentView", "startMenu");
-  Players.remove(player._id);
+//   Session.set("currentView", "startMenu");
+//   Players.remove(player._id);
 
-  Session.set("playerID", null);
-}
+//   Session.set("playerID", null);
+// }
 
-function resetUserState(){
-  var player = getCurrentPlayer();
+// function resetUserState(){
+//   var player = getCurrentPlayer();
 
-  if (player){
-    Players.remove(player._id);
-  }
+//   if (player){
+//     Players.remove(player._id);
+//   }
 
-  Session.set("gameID", null);
-  Session.set("playerID", null);
-}
+//   Session.set("gameID", null);
+//   Session.set("playerID", null);
+// }
 
-function hasHistoryApi () {
-  return !!(window.history && window.history.pushState);
-}
+// function hasHistoryApi () {
+//   return !!(window.history && window.history.pushState);
+// }
 
-Meteor.setInterval(function () {
-  Session.set('time', new Date());
-}, 1000);
+// Meteor.setInterval(function () {
+//   Session.set('time', new Date());
+// }, 1000);
 
-if (hasHistoryApi()){
-  function trackUrlState () {
-    var accessCode = null;
-    var game = getCurrentGame();
-    if (game){
-      accessCode = game.accessCode;
-    } else {
-      accessCode = Session.get('urlAccessCode');
-    }
+// if (hasHistoryApi()){
+//   function trackUrlState () {
+//     var roomName = null;
+//     var game = getCurrentGame();
+//     if (game){
+//       roomName = game.roomName;
+//     } else {
+//       roomName = Session.get('urlAccessCode');
+//     }
     
-    var currentURL = '/';
-    if (accessCode){
-      currentURL += accessCode+'/';
-    }
-    window.history.pushState(null, null, currentURL);
-  }
-  Tracker.autorun(trackUrlState);
-}
-Tracker.autorun(trackGameState);
+//     var currentURL = '/';
+//     if (roomName){
+//       currentURL += roomName+'/';
+//     }
+//     window.history.pushState(null, null, currentURL);
+//   }
+//   Tracker.autorun(trackUrlState);
+// }
+// Tracker.autorun(trackGameState);
 
-window.onbeforeunload = resetUserState;
-window.onpagehide = resetUserState;
+// window.onbeforeunload = resetUserState;
+// window.onpagehide = resetUserState;
 
-FlashMessages.configure({
-  autoHide: true,
-  autoScroll: false
-});
+// FlashMessages.configure({
+//   autoHide: true,
+//   autoScroll: false
+// });
