@@ -3,15 +3,16 @@ Template.startMenu.events({
     var playerName = event.target.playerName.value;
     if (!playerName) return false;
 
+    // Could use a Mongo collection model here instead.
     function createPlayer( playerName ) {
       var new_player = {
         gameID: null,
         name: playerName
       };
       var playerID = Players.insert(new_player);
-      console.log('PLAYER CREATED',JSON.stringify(playerID));
       return Players.findOne(playerID);
     };
+
     var player = createPlayer( playerName );
     // Meteor.subscribe('players', player.name, function onReady(){
       Session.set("playerID", player._id);
@@ -20,7 +21,6 @@ Template.startMenu.events({
   },
   'click #btn-new-game': function () {
 
-    console.log('MAKING NEW GAME');
     function generateRoomName() {
       var new_code = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -49,20 +49,14 @@ Template.startMenu.events({
 
     var game = createGame();
     var player = getCurrentPlayer();
-    // Meteor.subscribe('games', game._id, function onReady(){  
-      Games.update({ _id: game._id}, { $push: { players: player._id }});
-      // Meteor.subscribe('players', player.name, function onReady(){
-        Players.update( player._id, { $set: { gameID: game._id }});
-        Session.set("gameID", game._id);
-        Router.go('/' + game._id);
-    //   });
-    // });
+    Games.update({ _id: game._id}, { $push: { players: player._id }});
+    Players.update( player._id, { $set: { gameID: game._id }});
+    Session.set("gameID", game._id);
+    Router.go('/' + game._id);
     return false;
   },
   'click #btn-join-game': function () {
-    // Meteor.subscribe('games', function onReady(){
-      Session.set("currentView", "joinGame");
-    // });
+    Session.set("currentView", "joinGame");
   }
 });
 
@@ -72,6 +66,4 @@ Template.startMenu.helpers({
   }
 });
 
-Template.startMenu.rendered = function () {
-  // resetUserState();
-};
+Template.startMenu.rendered = function () {};

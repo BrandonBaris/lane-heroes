@@ -1,10 +1,10 @@
 <template name="joinGame">
   <h4>
-    Welcome! Select a game to challenge that person or make a new one.
+    Welcome! Select a room to join a game.
   </h4>
   <ol>
     {{#each games }}
-      <a href="/{{_id}}"><li>{{ _id }}</li></a>
+      <a href="/{{_id}}"><li>{{ roomName }}</li></a>
     {{/each}}
   </ol>
   {{ player.name }}

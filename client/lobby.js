@@ -34,15 +34,14 @@ Template.lobby.helpers({
 
 Template.lobby.events({
   'click .btn-leave': function () {  
-  var player = getCurrentPlayer();
-  var game = getCurrentGame();
-  console.log('game',JSON.stringify(game));
-  console.log('playerid',player);
-  Meteor.subscribe('games', function onReady(){
+    var player = getCurrentPlayer();
+    var game = getCurrentGame();
+    console.log('game',JSON.stringify(game));
+    console.log('playerid',player);
+    // Meteor.subscribe('games', function onReady(){
     console.log('game.players',game.players);
     var player_index = game.players.indexOf( player._id );
     var edited_players = game.players.slice( player_index, player_index + 1 );
-    console.log('game.players',game.players);
     console.log('index',player_index);
     console.log('edited_players',edited_players);
     Games.update( game._id, { $pullAll: { players: edited_players }});
@@ -51,10 +50,9 @@ Template.lobby.events({
     Session.set("gameID", null);
     console.log('Session.get',Session.get('gameID'));
     Router.go('/');
-  });
-},
+  // });
+  },
   'click .btn-start': function () {
-
     var game = getCurrentGame();
     Games.update(game._id, {$set: {state: 'settingUp'}});
   },
@@ -64,7 +62,7 @@ Template.lobby.events({
   },
   'click .btn-edit-player': function (event) {
     var game = getCurrentGame();
-    resetUserState();
+    // resetUserState();
     Session.set('currentView', 'joinGame');
   }
 });
@@ -97,10 +95,6 @@ Template.lobby.created = function (event) {
 };
 
 Template.lobby.rendered = function (event) {
-  var player = getCurrentPlayer();
-  console.log('player got in lobby',player);
-  console.log('current gameID set', Session.get('gameID'));
-
-  
-  // var url = getAccessLink();
+  console.log('Player got in lobby. ID: ',Session.get('playerID'));
+  console.log('Current gameID set: ', Session.get('gameID'));
 };

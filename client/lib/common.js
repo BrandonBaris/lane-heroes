@@ -1,6 +1,6 @@
-// Handlebars.registerHelper('toCapitalCase', function(str) {
-//   return str.charAt(0).toUpperCase() + str.slice(1);
-// });
+Handlebars.registerHelper('toCapitalCase', function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+});
 
 getCurrentGame = function getCurrentGame(){
   var gameID = Session.get("gameID");
@@ -28,67 +28,30 @@ getCurrentPlayer = function getCurrentPlayer(){
   }
 };
 
-// generateAccessCode = function generateAccessCode(){
-//   var code = "";
-//   var possible = "abcdefghijklmnopqrstuvwxyz";
+trackGameState = function trackGameState () {
+  var gameID = Session.get("gameID");
+  var playerID = Session.get("playerID");
 
-//     for(var i=0; i < 6; i++){
-//       code += possible.charAt(Math.floor(Math.random() * possible.length));
-//     }
+  if (!gameID || !playerID){
+    return;
+  }
 
-//     return code;
-// };
+  var game = Games.findOne(gameID);
+  var player = Players.findOne(playerID);
 
-// generateNewGame = function generateNewGame(){
-//   var game = {
-//     roomName: generateAccessCode(),
-//     state: "waitingForPlayers",
-//     lengthInMinutes: 3,
-//     endTime: null,
-//     position: []
-//   };
+  if (!game || !player){
+    Session.set("gameID", null);
+    Session.set("playerID", null);
+    Session.set("currentView", "startMenu");
+    return;
+  }
 
-//   var gameID = Games.insert(game);
-//   game = Games.findOne(gameID);
-
-//   return game;
-// };
-
-// generateNewPlayer = function generateNewPlayer( name ){
-//   var player = {
-//     gameID: null,
-//     name: name
-//   };
-
-//   var playerID = Players.insert(player);
-
-//   return Players.findOne(playerID);
-// };
-
-// trackGameState = function trackGameState () {
-//   var gameID = Session.get("gameID");
-//   var playerID = Session.get("playerID");
-
-//   if (!gameID || !playerID){
-//     return;
-//   }
-
-//   var game = Games.findOne(gameID);
-//   var player = Players.findOne(playerID);
-
-//   if (!game || !player){
-//     Session.set("gameID", null);
-//     Session.set("playerID", null);
-//     Session.set("currentView", "startMenu");
-//     return;
-//   }
-
-//   if(game.state === "inProgress"){
-//     Session.set("currentView", "gameView");
-//   } else if (game.state === "waitingForPlayers") {
-//     Session.set("currentView", "lobby");
-//   }
-// };
+  if(game.state === "inProgress"){
+    Session.set("currentView", "gameView");
+  } else if (game.state === "waitingForPlayers") {
+    Session.set("currentView", "lobby");
+  }
+};
 
 leaveGame = function leaveGame () {  
   var player = getCurrentPlayer();
@@ -129,33 +92,33 @@ leaveGame = function leaveGame () {
 //   Session.set("playerID", null);
 // };
 
-// // hasHistoryApi = function hasHistoryApi () {
-// //   return !!(window.history && window.history.pushState);
-// // };
+hasHistoryApi = function hasHistoryApi () {
+  return !!(window.history && window.history.pushState);
+};
 
-// Meteor.setInterval(function () {
-//   Session.set('time', new Date());
-// }, 1000);
+Meteor.setInterval(function () {
+  Session.set('time', new Date());
+}, 1000);
 
-// // if (hasHistoryApi()){
-// //   function trackUrlState () {
-// //     var roomName = null;
-// //     var game = getCurrentGame();
-// //     if (game){
-// //       roomName = game.roomName;
-// //     } else {
-// //       roomName = Session.get('urlAccessCode');
-// //     }
+if (hasHistoryApi()){
+  function trackUrlState () {
+    var roomName = null;
+    var game = getCurrentGame();
+    if (game){
+      roomName = game._id;
+    } else {
+      roomName = Session.get('gameID');
+    }
     
-// //     var currentURL = '/';
-// //     if (roomName){
-// //       currentURL += roomName+'/';
-// //     }
-// //     window.history.pushState(null, null, currentURL);
-// //   }
-// //   Tracker.autorun(trackUrlState);
-// // }
-// // Tracker.autorun(trackGameState);
+    var currentURL = '/';
+    if (roomName){
+      currentURL += roomName+'/';
+    }
+    window.history.pushState(null, null, currentURL);
+  }
+  Tracker.autorun(trackUrlState);
+}
+Tracker.autorun(trackGameState);
 
 // window.onbeforeunload = resetUserState;
 // window.onpagehide = resetUserState;
