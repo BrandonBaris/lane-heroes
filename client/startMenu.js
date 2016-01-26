@@ -13,9 +13,9 @@ Template.startMenu.events({
       return Players.findOne(playerID);
     };
     var player = createPlayer( playerName );
-    Meteor.subscribe('players', player.name, function onReady(){
+    // Meteor.subscribe('players', player.name, function onReady(){
       Session.set("playerID", player._id);
-    });
+    // });
     return false;
   },
   'click #btn-new-game': function () {
@@ -49,20 +49,20 @@ Template.startMenu.events({
 
     var game = createGame();
     var player = getCurrentPlayer();
-    Meteor.subscribe('games', game._id, function onReady(){  
+    // Meteor.subscribe('games', game._id, function onReady(){  
       Games.update({ _id: game._id}, { $push: { players: player._id }});
-      Meteor.subscribe('players', player.name, function onReady(){
+      // Meteor.subscribe('players', player.name, function onReady(){
         Players.update( player._id, { $set: { gameID: game._id }});
         Session.set("gameID", game._id);
         Router.go('/' + game._id);
-      });
-    });
+    //   });
+    // });
     return false;
   },
   'click #btn-join-game': function () {
-    Meteor.subscribe('games', function onReady(){
+    // Meteor.subscribe('games', function onReady(){
       Session.set("currentView", "joinGame");
-    });
+    // });
   }
 });
 

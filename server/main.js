@@ -20,14 +20,6 @@ var MyCron = new Cron(10000);
 
 MyCron.addJob(5, cleanUpGamesAndPlayers);
 
-Meteor.publish('games', function() {
-  return Games.find();
-});
-
-Meteor.publish('players', function() {
-  return Players.find();
-});
-
 // Meteor.publish('players', function(gameID) {
 //   return Players.find({"gameID": gameID});
 // });
