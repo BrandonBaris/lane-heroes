@@ -18,11 +18,11 @@ Template.lobby.helpers({
 
     var players = Players.find({gameID: game._id}, {'sort': {'createdAt': 1}}).fetch();
 
-    // players.forEach(function(player){
-    //   if (player._id === currentPlayer._id){
-    //     player.isCurrent = true;
-    //   }
-    // });
+    players.forEach(function(player){
+      if (player._id === currentPlayer._id){
+        player.isCurrent = true;
+      }
+    });
 
     return players;
   },
@@ -33,7 +33,26 @@ Template.lobby.helpers({
 });
 
 Template.lobby.events({
-  'click .btn-leave': leaveGame,
+  'click .btn-leave': function () {  
+  var player = getCurrentPlayer();
+  var game = getCurrentGame();
+  console.log('game',JSON.stringify(game));
+  console.log('playerid',player);
+  Meteor.subscribe('games', function onReady(){
+    console.log('game.players',game.players);
+    var player_index = game.players.indexOf( player._id );
+    var edited_players = game.players.slice( player_index, player_index + 1 );
+    console.log('game.players',game.players);
+    console.log('index',player_index);
+    console.log('edited_players',edited_players);
+    Games.update( game._id, { $pullAll: { players: edited_players }});
+    console.log('Games.findOne(game._id)',Games.findOne(game._id));
+    Players.update( player._id, { $set: { gameID: null }});
+    Session.set("gameID", null);
+    console.log('Session.get',Session.get('gameID'));
+    Router.go('/');
+  });
+},
   'click .btn-start': function () {
 
     var game = getCurrentGame();
@@ -46,7 +65,6 @@ Template.lobby.events({
   'click .btn-edit-player': function (event) {
     var game = getCurrentGame();
     resetUserState();
-    Session.set('urlAccessCode', game.roomName);
     Session.set('currentView', 'joinGame');
   }
 });
@@ -76,20 +94,13 @@ Template.lobby.created = function (event) {
   //     FlashMessages.sendError('Error joining room');
   //   }
   // });
+};
+
+Template.lobby.rendered = function (event) {
   var player = getCurrentPlayer();
   console.log('player got in lobby',player);
   console.log('current gameID set', Session.get('gameID'));
 
-  Meteor.subscribe('games', function onReady(){
-    var game = Games.findOne( Session.get("gameID") );
-    console.log('got an existing game',game);
-    Games.update({ _id: game._id }, { $push: { players: player._id }});
-    Meteor.subscribe('players', function onReady(){
-      Players.update(player._id, { $set: { gameID: game._id }});
-    });
-  });
-};
-
-Template.lobby.rendered = function (event) {
+  
   // var url = getAccessLink();
 };

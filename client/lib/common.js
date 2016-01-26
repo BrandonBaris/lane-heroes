@@ -24,7 +24,6 @@ getCurrentPlayer = function getCurrentPlayer(){
   var playerID = Session.get("playerID");
 
   if (playerID) {
-    console.log('Player session exists: ', playerID);
     return Players.findOne(playerID);
   }
 };
@@ -95,17 +94,19 @@ leaveGame = function leaveGame () {
   var player = getCurrentPlayer();
   var game = getCurrentGame();
   console.log('game',JSON.stringify(game));
-  console.log('game.players',game.players);
   console.log('playerid',player);
   Meteor.subscribe('games', function onReady(){
+    console.log('game.players',game.players);
     var player_index = game.players.indexOf( player._id );
     var edited_players = game.players.slice( player_index, player_index + 1 );
+    console.log('game.players',game.players);
+    console.log('index',player_index);
     console.log('edited_players',edited_players);
-    Games.update( game._id, { $set: { players: edited_players }});
-    Players.update(player._id, { $set: { gameID: null }});
+    Games.update( game._id, { $pullAll: { players: edited_players }});
+    console.log('Games.findOne(game._id)',Games.findOne(game._id));
+    Players.update( player._id, { $set: { gameID: null }});
     Session.set("gameID", null);
     console.log('Session.get',Session.get('gameID'));
-    // Session.set("urlAccessCode", null);
     Session.set("currentView", "startMenu");
   });
 };

@@ -54,8 +54,7 @@ Template.startMenu.events({
       Meteor.subscribe('players', player.name, function onReady(){
         Players.update( player._id, { $set: { gameID: game._id }});
         Session.set("gameID", game._id);
-        Meteor.settings.public.url + game._id + "/";
-        Session.set("currentView", 'lobby');
+        Router.go('/' + game._id);
       });
     });
     return false;
