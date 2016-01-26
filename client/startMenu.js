@@ -49,12 +49,12 @@ Template.startMenu.events({
 
     var game = createGame();
     var player = getCurrentPlayer();
-    Meteor.subscribe('games', game.roomName, function onReady(){  
+    Meteor.subscribe('games', game._id, function onReady(){  
       Games.update({ _id: game._id}, { $push: { players: player._id }});
       Meteor.subscribe('players', player.name, function onReady(){
         Players.update( player._id, { $set: { gameID: game._id }});
         Session.set("gameID", game._id);
-        Meteor.settings.public.url + game.roomName + "/";
+        Meteor.settings.public.url + game._id + "/";
         Session.set("currentView", 'lobby');
       });
     });

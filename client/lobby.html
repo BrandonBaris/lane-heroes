@@ -9,7 +9,7 @@
 
   <div class="access-code">
     Game Code:
-    <span>{{ game.roomName }}</span>
+    <span>{{ game._id }}</span>
   </div>
 
     <span class="access-button-separator"></span>
@@ -19,7 +19,7 @@
   <ol class="lobby-player-list">
     {{#each players }}
       <li>
-        {{ name }}
+        {{ name }} {{_id}}
 
 <!--         {{#if isCurrent }}
           <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
