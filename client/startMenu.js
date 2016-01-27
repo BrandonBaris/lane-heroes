@@ -20,7 +20,6 @@ Template.startMenu.events({
     return false;
   },
   'click #btn-new-game': function () {
-
     function generateRoomName() {
       var new_code = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -42,15 +41,13 @@ Template.startMenu.events({
       };
 
       var gameID = Games.insert(new_game);
-      new_game = Games.findOne(gameID);
-
-      return new_game;
+      return Games.findOne(gameID);
     };
 
     var game = createGame();
-    var player = getCurrentPlayer();
-    Games.update({ _id: game._id}, { $push: { players: player._id }});
-    Players.update( player._id, { $set: { gameID: game._id }});
+    // var player = getCurrentPlayer();
+    // Games.update({ _id: game._id}, { $push: { players: player._id }});
+    // Players.update( player._id, { $set: { gameID: game._id }});
     Session.set("gameID", game._id);
     Router.go('/' + game._id);
     return false;

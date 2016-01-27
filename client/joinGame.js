@@ -57,11 +57,14 @@ Template.joinGame.helpers({
     //   }
     // });
 
-    games.filter( function( game ){
+    var filteredGames = games.filter( function( game ){
       return game.state == 'waitingForPlayers';
+    }).filter( function( game ){
+      console.log('game.players.length',game.players.length);
+      return game.players.length != 2;
     });
 
-    return games;
+    return filteredGames;
   },
   player: function() {
     return getCurrentPlayer();
