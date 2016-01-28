@@ -14,9 +14,7 @@ Template.startMenu.events({
     };
 
     var player = createPlayer( playerName );
-    // Meteor.subscribe('players', player.name, function onReady(){
-      Session.set("playerID", player._id);
-    // });
+    Session.set("playerID", player._id);
     return false;
   },
   'click #btn-new-game': function () {
@@ -45,10 +43,6 @@ Template.startMenu.events({
     };
 
     var game = createGame();
-    // var player = getCurrentPlayer();
-    // Games.update({ _id: game._id}, { $push: { players: player._id }});
-    // Players.update( player._id, { $set: { gameID: game._id }});
-    Session.set("gameID", game._id);
     Router.go('/' + game._id);
     return false;
   },
